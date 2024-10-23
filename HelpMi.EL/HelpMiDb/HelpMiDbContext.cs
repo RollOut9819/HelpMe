@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using HelpMi.Infrastructure;
 
 namespace HelpMi.EL.HelpMiDb
 {
@@ -26,6 +27,11 @@ namespace HelpMi.EL.HelpMiDb
             modelBuilder.Entity<Category>().ToTable("Category", schema: "dbo");           
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(Infrastructure.ConnectionStrings.OcStanceConnection);
         }
     }
 }

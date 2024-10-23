@@ -1,0 +1,163 @@
+Ecco un elenco delle decorazioni (o data annotations) più comuni utilizzate in Entity Framework per configurare direttamente le entità in C#:
+
+Specifica il nome della tabella e lo schema.
+csharp
+
+[Table("TableName", Schema = "SchemaName")]
+
+Specifica il nome della colonna e altre proprietà come il tipo di dato nel database.
+csharp
+
+[Column("ColumnName", TypeName = "varchar(100)")]
+[Key]
+
+Definisce la proprietà come chiave primaria.
+csharp
+
+[Key]
+[ForeignKey]
+
+Specifica una proprietà come chiave esterna.
+csharp
+
+[ForeignKey("ForeignKeyPropertyName")]
+Decorazioni per la Validazione e i Constraints
+[Required]
+
+Impone che una proprietà non possa essere null.
+csharp
+
+[Required]
+[MaxLength]
+
+Specifica la lunghezza massima di una stringa.
+csharp
+
+[MaxLength(50)]
+[MinLength]
+
+Specifica la lunghezza minima di una stringa.
+csharp
+
+[MinLength(10)]
+[StringLength]
+
+Specifica la lunghezza massima e minima di una stringa.
+csharp
+
+[StringLength(100, MinimumLength = 10)]
+[Range]
+
+Impone un intervallo di valori per la proprietà.
+csharp
+
+[Range(1, 100)]
+[ConcurrencyCheck]
+
+Indica che la proprietà è utilizzata per il controllo delle concorrenze.
+csharp
+
+[ConcurrencyCheck]
+[Timestamp]
+
+Definisce una proprietà come campo di timestamp utilizzato per la concorrenza ottimistica.
+csharp
+
+[Timestamp]
+[Index]
+
+Crea un indice sul campo. Puoi definire se l'indice è unico o meno.
+csharp
+
+[Index(IsUnique = true)]
+Decorazioni per il Comportamento delle Chiavi
+[DatabaseGenerated]
+Definisce come la chiave primaria è generata (Identity, Computed, None).
+csharp
+
+[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+Decorazioni per le Relazioni
+[InverseProperty]
+
+Definisce la proprietà di navigazione inversa in una relazione.
+csharp
+
+[InverseProperty("RelatedEntity")]
+[NotMapped]
+
+Esclude una proprietà dall'essere mappata al database.
+csharp
+
+[NotMapped]
+[ComplexType]
+
+Indica che una classe non è una tabella ma una complessità incorporata in un'altra tabella.
+csharp
+
+[ComplexType]
+Decorazioni per Formattazione
+[DataType]
+
+Specifica il tipo di dato, utile per formattare l'output (ad esempio Data, Email, Url).
+csharp
+
+[DataType(DataType.Date)]
+[DisplayFormat]
+
+Definisce il formato di visualizzazione per la proprietà.
+csharp
+
+[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+Decorazioni per Visualizzazione e Localizzazione
+[Display]
+
+Definisce il nome, la descrizione e altri dettagli per la proprietà che possono essere utilizzati per la visualizzazione.
+csharp
+
+[Display(Name = "First Name", Description = "User's First Name")]
+[ScaffoldColumn]
+
+Specifica se una proprietà deve essere mostrata nei form (scaffold).
+csharp
+
+[ScaffoldColumn(false)]
+Esempio completo:
+csharp
+
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("User", Schema = "user")]
+public class User
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    [Column("UserName", TypeName = "varchar(50)")]
+    public string Name { get; set; }
+
+    [ForeignKey("Department")]
+    public int DepartmentId { get; set; }
+
+    [InverseProperty("Users")]
+    public Department Department { get; set; }
+
+    [NotMapped]
+    public string TempData { get; set; }
+}
+
+[Table("Department", Schema = "dbo")]
+public class Department
+{
+    [Key]
+    public int Id { get; set; }
+
+    [MaxLength(100)]
+    public string DepartmentName { get; set; }
+
+    public ICollection<User> Users { get; set; }
+}
+Queste decorazioni ti permettono di definire in modo dettagliato come le entità devono essere mappate nel database senza dover scrivere troppo codice nel metodo OnModelCreating.
